@@ -1,0 +1,41 @@
+{
+    "model" : {
+        "backend":              "Full Yolo",
+        "input_size":           416,
+        "anchors":              [0.96,1.49, 2.44,4.30, 4.26,8.73, 7.94,5.31, 10.04,10.85],
+        "max_box_per_image":    10,
+        "labels":               ["person","car"]
+    },
+
+    "train": {
+        "train_image_folder":   "C:/Users/wanye/smart_road/datasets/training/image/",
+        "train_annot_folder":   "C:/Users/wanye/smart_road/datasets/training/annotation/",
+
+        "train_times":          2,
+        "pretrained_weights":   "C:/Users/wanye/smart_road/keras-yolo2/full_yolo_VOC_CLCB_KITTI.h5",
+        "batch_size":           14,
+        "learning_rate":        1e-6,
+        "nb_epochs":            200,
+        "warmup_epochs":        0,
+
+        "object_scale":         5.0 ,
+        "no_object_scale":      1.0,
+        "coord_scale":          1.0,
+        "class_scale":          1.0,
+
+        "saved_weights_name":   "full_yolo_VOC_CLCB_KITTI.h5",
+        "debug":                true
+    },
+
+    "valid": {
+        "valid_image_folder":   "",
+        "valid_annot_folder":   "",
+
+        "valid_times":          1
+    },
+        "predict" : {
+            "threshold":    0.10,
+            "max_sur":      0.2,
+            "saved":        false
+    }
+}
