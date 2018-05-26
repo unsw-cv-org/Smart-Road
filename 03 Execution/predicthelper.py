@@ -116,6 +116,7 @@ def predict_with_video(model,video_file,saved):
     video_writer = None
     state_fps = None
     cut_count = None
+    cv2.namedWindow('frame', flags=0)
 
     '''
     # get state_fps and cut_count by first 2 seconds
@@ -146,7 +147,7 @@ def predict_with_video(model,video_file,saved):
     '''
     ret, frame = cap.read()
     count = 0
-    frame_hist = collections.deque()
+    obj_hist = collections.deque()
     while(cap.isOpened() and ret):
         stime = time.time()
         ret, frame = cap.read()
@@ -158,10 +159,8 @@ def predict_with_video(model,video_file,saved):
             
         if ret:
             frame ,info = _img_render(model, frame)
-            if len(frame_hist) > 4:
-                frame_hist.pop(0)
-            #frame_hist.
-            frame, info, count = counthelper._count_render(frame_hist, frame, info, count)
+            
+            obj_hist, count, frame, info = counthelper._count_render(obj_hist, count, frame, info)
             if video_writer:
                 video_writer.write(np.uint8(frame))
 
@@ -185,6 +184,7 @@ def predict_with_video(model,video_file,saved):
             delta_time = delta_time if delta_time!=0.0 else 0.0001 
             print('FPS {:.1f}'.format(1.0 / delta_time ))
             cv2.imshow('frame', frame)
+            
         else:
             print('no ret')
         if cv2.waitKey(1) & 0xFF == ord('q'): break
