@@ -118,7 +118,7 @@ def predict_with_video(model,video_file,saved):
     cut_count = None
     cv2.namedWindow('frame', flags=0)
 
-    '''
+
     # get state_fps and cut_count by first 2 seconds
     stime = time.time()
     etime = time.time()
@@ -140,44 +140,59 @@ def predict_with_video(model,video_file,saved):
 
     # creat video writer if needed
     if saved:
+        state_fps = state_fps-5
         video_writer = cv2.VideoWriter(video_out,
                                cv2.VideoWriter_fourcc(*'MPEG'),
                                state_fps,
                                (frame_w, frame_h))
-    '''
+
+
     ret, frame = cap.read()
     count = 0
     obj_hist = collections.deque()
+
+
+
+    flag = "traffic" in video_file
+
+
+
+
     while(cap.isOpened() and ret):
         stime = time.time()
         ret, frame = cap.read()
         
-        '''
+
         for _ in range(cut_count):
             ret, frame = cap.read()
-        '''    
+
             
         if ret:
             frame ,info = _img_render(model, frame)
-            
-            obj_hist, count, frame, info = counthelper._count_render(obj_hist, count, frame, info)
+            """
+                        info is a list of dict
+                        each dict contain information of a bounding box
+                        dict structure:
+                        {"xmin":xmin,   -> int
+                        "ymin":ymin,    -> int
+                        "xmax":xmax,    -> int
+                        "ymax":ymax,    -> int
+                        "label":label,  -> string
+                        "confidence":confidence -> float}
+
+
+            """
+
+
+
+            if flag:
+                obj_hist, count, frame, info = counthelper._count_render(obj_hist, count, frame, info)
+
+
+
+
             if video_writer:
                 video_writer.write(np.uint8(frame))
-
-            """
-            info is a list of dict
-            each dict contain information of a bounding box
-            dict structure:
-            {"xmin":xmin,   -> int
-            "ymin":ymin,    -> int
-            "xmax":xmax,    -> int
-            "ymax":ymax,    -> int
-            "label":label,  -> string
-            "confidence":confidence -> float}
-
-            you need to do extantion by this info
-
-            """
 
 
             delta_time = time.time() - stime
