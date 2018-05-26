@@ -1,6 +1,8 @@
 import cv2
 import numpy as np
 import time
+import collections
+import counthelper
 
 
 def _func_helper(model, img):
@@ -49,13 +51,10 @@ def _img_render(model, img):
         img = cv2.putText(img, text, (xmin, ymin ), cv2.FONT_HERSHEY_COMPLEX, 1, color, 1)
 
     return img, info
+    
 
-def _count_render(frame, info):
-    #count = counthelper.count(frame, info)
-    count = 0
-    text = 'count: {}'.format(count)
-    frame = cv2.putText(frame, text, (50, 50 ), cv2.FONT_HERSHEY_COMPLEX, 1, (0,0,255), 2)
-    return frame, info
+
+
             
 # api                       
 def predict_with_camera(model, frame_width=800, frame_height=600):
@@ -117,7 +116,9 @@ def predict_with_video(model,video_file,saved):
     video_writer = None
     state_fps = None
     cut_count = None
+    cv2.namedWindow('frame', flags=0)
 
+    '''
     # get state_fps and cut_count by first 2 seconds
     stime = time.time()
     etime = time.time()
@@ -143,7 +144,10 @@ def predict_with_video(model,video_file,saved):
                                cv2.VideoWriter_fourcc(*'MPEG'),
                                state_fps,
                                (frame_w, frame_h))
+    '''
     ret, frame = cap.read()
+    count = 0
+    obj_hist = collections.deque()
     while(cap.isOpened() and ret):
         stime = time.time()
         ret, frame = cap.read()
@@ -155,7 +159,8 @@ def predict_with_video(model,video_file,saved):
             
         if ret:
             frame ,info = _img_render(model, frame)
-            frame,info = _count_render(frame, info)
+            
+            obj_hist, count, frame, info = counthelper._count_render(obj_hist, count, frame, info)
             if video_writer:
                 video_writer.write(np.uint8(frame))
 
@@ -179,6 +184,7 @@ def predict_with_video(model,video_file,saved):
             delta_time = delta_time if delta_time!=0.0 else 0.0001 
             print('FPS {:.1f}'.format(1.0 / delta_time ))
             cv2.imshow('frame', frame)
+            
         else:
             print('no ret')
         if cv2.waitKey(1) & 0xFF == ord('q'): break
