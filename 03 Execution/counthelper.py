@@ -25,11 +25,11 @@ def _count_render(obj_hist, count, frame, info, k_hist = 3):
         
         if in_checkarea(centroid, checkarea):
             cur_objs.append(centroid)  # record the object into cur_objs
-            frame = cv2.circle(frame, centroid, 10, (0,0,255), -1)
+            frame = cv2.circle(frame, centroid, 5, (0,0,255), -1)
             if not in_hist(centroid, obj_hist):
                 count += 1
         else:
-            frame = cv2.circle(frame, centroid, 4, (0,255,0), -1)
+            frame = cv2.circle(frame, centroid, 3, (0,255,0), -1)
             
     # record captured object
     if len(obj_hist) >= k_hist:
@@ -50,22 +50,25 @@ def in_checkarea(centroid, checkarea):
         
 def in_hist(centroid, obj_hist, th_dist=(20,20)):
     in_history = False
-    print(f'current obj: {centroid}')
+    #print(f'current obj: {centroid}')
     for h_id, objs in enumerate(obj_hist):
-        print(f'{h_id+1}-history objects= {objs}')
+        #print(f'{h_id+1}-history objects= {objs}')
         for o in objs:
             dist = (o[0] - centroid[0])**2 + (o[0] - centroid[0])**2
             th = (th_dist[0]**2+th_dist[1]**2) * (h_id+1)
-            print(f'dist={dist} vs {th}=threshold')
+            #print(f'dist={dist} vs {th}=threshold')
             if dist < th:
                 in_history = True
-                print('inner threshold')
+                #print('inner threshold')
             else:
-                print('uppon threshold')
+                #print('uppon threshold')
+                pass
     if in_history:
-        print('same object')
+        #print('same object')
+        pass
     else:
-        print('not same object')
+        #print('not same object')
+        pass
     #input()
     return in_history
             

@@ -34,7 +34,7 @@
         "valid_times":          1
     },
         "predict" : {
-            "threshold":    0.10,
+            "threshold":    0.12,
             "max_sur":      0.2,
             "saved":        false
     }
