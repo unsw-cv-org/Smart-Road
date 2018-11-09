@@ -2,10 +2,11 @@
 The Smart Road, an intelligent road monitor system, applys techonology of computer vision and artificial intelligence to detecte on-road objects including vehicle, bicycle, pedestrian and so on.
   
 
+
 ### Project numbers:
-* Robin
-* Kevin
-* Dominic
+* Robin Rao
+* Kevin Wan
+* Dominic Chai
 
 
 ### GitHub workflow:
